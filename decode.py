@@ -28,10 +28,10 @@ with open("coding_qual_input.txt", "r") as file:
     countToAdd = incrementer + 1
     pyramid = []
     while incrementer < digitsLength:
-        if len(encodedDigits) == 0:
-            break
         row = []
         for n in range(countToAdd):
+            if len(encodedDigits) == 0:
+                break
             popped = encodedDigits.pop(0)
             row.append(popped)
         incrementer += 1
@@ -39,12 +39,14 @@ with open("coding_qual_input.txt", "r") as file:
         pyramid.append(row)
     output = []
     for array in pyramid:
-        toPopIn = array.pop()
-        output.append(toPopIn)
+        if array:
+            toPopIn = array.pop()
+            output.append(toPopIn)
     answers = [
         cipher[answerNumber] for answerNumber in output if answerNumber in cipher
     ]
-    print(answers)
+    returnValue = " ".join(answers)
+    print(returnValue)
 
 # I think I want to flag 'good digits'
 # So I need to write a function that will output

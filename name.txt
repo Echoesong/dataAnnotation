@@ -1,0 +1,7 @@
+1 happiness
+5 programming
+3 art
+7 science
+2 nature
+6 mathematics
+4 music
