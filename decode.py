@@ -1,52 +1,57 @@
 import re
 
-with open("coding_qual_input.txt", "r") as file:
+
+def parse_file(file_name):
     cipher = {}
     pattern = r"\d"
-    for line in file:
-        digits = []
-        alphabet = []
-        middle = 0
-        for i, character in enumerate(line):
-            # Check if it's a number. If it is, append it to digits; if it's not, we've found the middle and set middle to i
-            if re.fullmatch(pattern, character):
-                digits.append(character)
-            else:
-                middle = i
-                break
-        for j, character in enumerate(line):
-            if j > middle:
-                alphabet.append(character)
-        finalDigits = int("".join(digits))
-        finalAlphabet = "".join(alphabet).strip()
-        cipher[finalDigits] = finalAlphabet
+    with open(file_name, "r") as file:
+        for line in file:
+            digits = []
+            alphabet = []
+            middle = 0
+            for i, character in enumerate(line):
+                if re.fullmatch(pattern, character):
+                    digits.append(character)
+                else:
+                    middle = i
+                    break
+            alphabet = line[middle:].strip()
+            finalDigits = int("".join(digits))
+            cipher[finalDigits] = alphabet
+    return cipher
 
-    # Below is setting up the pyramid
-    encodedDigits = sorted(cipher.keys())
-    digitsLength = len(encodedDigits)
-    incrementer = 0
-    countToAdd = incrementer + 1
+
+def build_pyramid(encoded_digits):
+    encoded_digits_sorted = sorted(encoded_digits)
+    index = 0
+    count_to_add = index + 1
     pyramid = []
-    while incrementer < digitsLength:
-        row = []
-        for n in range(countToAdd):
-            if len(encodedDigits) == 0:
-                break
-            popped = encodedDigits.pop(0)
-            row.append(popped)
-        incrementer += 1
-        countToAdd = incrementer + 1
+
+    while encoded_digits_sorted:
+        row = [
+            encoded_digits_sorted.pop(0)
+            for _ in range(count_to_add)
+            if encoded_digits_sorted
+        ]
         pyramid.append(row)
-    output = []
-    for array in pyramid:
-        if array:
-            toPopIn = array.pop()
-            output.append(toPopIn)
+        index += 1
+        count_to_add = index + 1
+
+    return pyramid
+
+
+def decode_pyramid(pyramid, cipher):
+    output = [array.pop() for array in pyramid if array]
     answers = [
         cipher[answerNumber] for answerNumber in output if answerNumber in cipher
     ]
-    returnValue = " ".join(answers)
-    print(returnValue)
+    return " ".join(answers)
 
-# I think I want to flag 'good digits'
-# So I need to write a function that will output
+
+def decode():
+    cipher = parse_file("coding_qual_input.txt")
+    pyramid = build_pyramid(cipher.keys())
+    return decode_pyramid(pyramid, cipher)
+
+
+print(decode())
